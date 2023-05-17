@@ -1,0 +1,73 @@
+\documentclass[12pt]{standalone}
+
+\input{config/gateway}
+\input{config/math}
+\input{config/tikz}
+\input{config/other}
+
+\begin{document}
+\begin{tikzpicture}[thick]
+  \def\lg{5mm}
+  \def\str{1.2}
+
+  \foreach \i in {0,1,...,7}{
+      \foreach \j in {0,1,...,7}{
+          \coordinate (n\i\j) at (\i*\lg,-\j*\lg);
+          \node[rectangle,draw,minimum width=\lg,minimum height=\lg] at (n\i\j) {};
+        }
+    }
+
+  \foreach \i in {1,2,...,4} {
+      \node at (-\lg*\str, -\i*\lg*2 + \lg*2) {\scalebox{.75}{$v_\i$}};
+      \node at (-\lg*\str, -\i*\lg*2 + \lg)   {\scalebox{.75}{$\varphi_\i$}};
+
+      \node at (\i*\lg*2 - \lg*2, \lg*\str)   {\scalebox{.75}{$v_\i$}};
+      \node at (\i*\lg*2 - \lg,   \lg*\str)   {\scalebox{.75}{$\varphi_\i$}};
+    }
+
+  % \begin{noindent}
+  \begin{python}
+colors = ["yellow!70!black", "red!70!black", "cyan!70!black"]
+D = V["DOF"][3]
+
+for i in reversed(range(3)):
+    # Matrix rectangles
+    dof = D[i]
+
+    for x in range(4):
+        for y in range(4):
+            print(
+                r"\node at (n" + 
+                str(dof[y]-1) + str(dof[x]-1) +
+                r")[rectangle, inner sep=0," +
+                r"minimum width="  + str((i + 2)) + "*1mm," +
+                r"minimum height=" + str((i + 2)) + "*1mm," +
+                r"draw="           + colors[i]          + ","     +
+                r"fill="           + colors[i]          + "!20"   +
+                r"]{};"
+            )
+
+    # Label rectangles
+    print(
+        r"\begin{scope}[xshift=-90mm," + 
+        r"yshift=-" + str(i) + "*12mm-5mm]" +
+        r"\node[rectangle, minimum width=1.5*\lg, minimum height=1.5*\lg," +
+        r"draw=" + colors[i] + ","    +
+        r"fill=" + colors[i] + "!10]" +
+        r"(r"    + str(i)    + ")"    + 
+        r"{"     + str(i+1)  + r"};"  +
+        r"\end{scope}"
+    )
+  \end{python}
+  % \end{noindent}
+
+  \foreach \i/\j  in {0/1,1/2,2/3} {
+      \node at ($(r\i)+(1,0)$) {$\rightarrow$};
+      \node at ($(r\i)+(4,0)$) {$
+          \rmat{DOF}_{\j} = \left[\begin{array}{*{8}{X{4mm}}}
+              \pyc{print_matrix(sp.Matrix(V["DOF"][3][\i]).T)}
+            \end{array}\right]
+        $};
+    }
+\end{tikzpicture}
+\end{document}

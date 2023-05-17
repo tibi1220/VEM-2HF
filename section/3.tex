@@ -1,0 +1,222 @@
+\section{3 elemes modell a koncentrált tömeg elhanyagolásával}
+
+\subsection{Általános adatok}
+
+Az előző feladattal ellentétben a mostani végeselemes modellünk 4 csomópontot
+és három gerenda-elemet tartalmaz. A csomópontok koordinátáit az
+\ref{fig:dot-numbering-b}. táblázat tartalmazza.
+\begin{table}[H]
+  \caption{A csomópontok koordinátái}
+  \centering
+  \begin{tabular}{|c *{2}{|| X{15mm} | X{15mm} }|}
+    \hline
+    Csp. & x     & y & x \, [\mathrm{mm}] & y \, [\mathrm{mm}] \\ \hline\hline
+    $1$  & 0     & 0 & 0                  & 0                  \\ \hline
+    $2$  & b / 2 & 0 & \sipv{hb}{}        & 0                  \\ \hline
+    $3$  & b     & 0 & \sipv{b}{}         & 0                  \\ \hline
+    $4$  & b + a & 0 & \sipv{c}{}         & 0                  \\ \hline
+  \end{tabular}
+  \label{fig:dot-numbering-b}
+\end{table}
+
+Az egyes elemekhez tartozó csomópontokat, valamint a gerendák hosszát a
+\ref{fig:beam-numbering-b}. táblázat foglalja össze.
+\begin{table}[H]
+  \caption{Elem – csomópont összerendelések}
+  \centering
+  \begin{tabular}{|c || c | c | c|}
+    \hline
+    Elem. & 1. csp & 2. csp & $L$   \\ \hline \hline
+    $1$   & $1$    & $2$    & $b/2$ \\ \hline
+    $2$   & $2$    & $3$    & $b/2$ \\ \hline
+    $3$   & $3$    & $4$    & $a$   \\ \hline
+  \end{tabular}
+  \label{fig:beam-numbering-b}
+\end{table}
+
+\subsection{A globális merevségi mátrix}
+
+Az elemi merevségi mátrixok az (\ref{eq:Ki-base})-es egyenlet alapján numerikusan:
+\begin{myframe}
+  \begin{align}
+    \siplaces{4}
+    \sifix{}
+    \rmat K_1^\b = \rmat K_2^\b = \left[
+      \begin{array}{*{8}{X{2cm}}}
+        \pyc{print_matrix(V["K_i"][3][0], 1, 1e-3)}
+      \end{array}
+      \right]
+    \cdot 10^3 \,\mathrm{SI}\text,
+    \\
+    \siplaces{4}
+    \sifix{}
+    \rmat K_3^\b = \left[
+      \begin{array}{*{8}{X{2cm}}}
+        \pyc{print_matrix(V["K_i"][3][2], 1, 1e-3)}
+      \end{array}
+      \right]
+    \cdot 10^3 \,\mathrm{SI}\text.
+  \end{align}
+\end{myframe}
+
+A globális merevségi mátrix meghatározásához írjuk fel az egyes elemekhez
+tartozó szabadsági fokokat mátrixosan:
+\begin{myframe}
+  \def\arraystretch{1.05}
+  \begin{equation}
+    \rmat{DOF}^\b =
+    \py{latex(sp.Matrix(V["DOF"][3]), mat_str="array").replace("cccc", "*{4}{X{7mm}}")}
+    \text.
+  \end{equation}
+\end{myframe}
+
+A globális merevségi mátrix összeállításakor figyelnünk kell arra, hogy az adott
+elem merevségi mátrixának megfelelő elemeit a hozzá tartozó szabadsági fokhoz
+tartozó helyhez rendeljük hozzá. Ezt a \ref{fig:K-construction-b}. ábra
+szemlélteti.
+\begin{figure}[ht]
+  \centering
+  \includestandalone{K-construction-3}
+  \caption{A globális merevségi mátrix szemléletes felépítése}
+  \label{fig:K-construction-b}
+\end{figure}
+
+A globális merevségi mátrix tehát az alábbi alakot veszi fel:
+\begin{myframe}
+  \begin{equation}
+    \siplaces{4}
+    \sifix{}
+    \rmat K^\b = \left[
+      \scalebox{.667}{$
+          \begin{array}{*{8}{X{1.85cm}}}
+            \pyc{print_matrix(V["K"][3], 1, 1e-3)}
+          \end{array}
+        $}
+      \right]
+    \cdot 10^3 \,\mathrm{SI}\text.
+  \end{equation}
+\end{myframe}
+
+\subsection{A globális tömegmátrix}
+
+Az elemi konzisztens tömegmátrixok a (\ref{eq:Mi-base})-os egyenlet alapján
+numerikusan:
+\begin{myframe}
+  \begin{align}
+    \siplaces{4}
+    \sifix{}
+    \rmat M_1^\b = \rmat M_2^\b = \left[
+      \begin{array}{*{8}{X{2cm}}}
+        \pyc{print_matrix(V["M_i"][3][0], 1e-6, 1)}
+      \end{array}
+      \right]
+    \,\mathrm{SI} \text,
+    \\
+    \siplaces{4}
+    \sifix{}
+    \rmat M_3^\b = \left[
+      \begin{array}{*{8}{X{2cm}}}
+        \pyc{print_matrix(V["M_i"][3][2], 1e-6, 1)}
+      \end{array}
+      \right]
+    \,\mathrm{SI} \text.
+  \end{align}
+\end{myframe}
+
+A globális tömegmátrix összeállítása az előzőekhez hasonlóan a
+\ref{fig:K-construction-b}. ábra alapján:
+\begin{myframe}
+  \begin{equation}
+    \siplaces{4}
+    \sifix{}
+    \rmat M_{\phantom{2}}^\b = \left[
+      \scalebox{.667}{$
+          \begin{array}{*{8}{X{2cm}}}
+            \pyc{print_matrix(V["M"]["b"], 1e-6, 1)}
+          \end{array}
+        $}
+      \right]
+    \,\mathrm{SI}\text.
+  \end{equation}
+\end{myframe}
+
+\subsection{A frekvencia-egyenlet}
+
+Írjuk fel a frekvencia-egyenletet, ahol $\alpha$ a saját-körfrekvenciát jelöli:
+\begin{myframe}
+  \begin{equation}
+    \det \left(
+    {\rmat K^\b} - \alpha^2 {\rmat M^\b}
+    \right) = 0
+    \text.
+  \end{equation}
+\end{myframe}
+
+A peremfeltételek jelen esetben:
+\begin{myframe}
+  \begin{equation}
+    v_\py{P["not_free"][33]["pv"]} =
+    v_\py{P["not_free"][33]["wv"]} =
+    \varphi_\py{P["not_free"][33]["wphi"]} =
+    0
+    \text.
+    \label{eq:cond-3}
+  \end{equation}
+\end{myframe}
+
+A kondenzált mátrixok:
+\begin{myframe}
+  \begin{alignat}{9}
+    \widehat{\rmat M}^\b & =
+    \siplaces{4}
+    \sifix{}
+    \left[
+      \scalebox{.833}{$
+          \begin{array}{*{6}{X{2cm}}}
+            \pyc{print_matrix(V["M_kond"]["b"], 1e-6, 1)}
+          \end{array}
+        $}
+      \right]
+    \,\mathrm{SI}\text,
+    \\
+    \widehat{\rmat K}^\b & =
+    \siplaces{4}
+    \sifix{}
+    \left[
+      \scalebox{.833}{$
+          \begin{array}{*{6}{X{2cm}}}
+            \pyc{print_matrix(V["K_kond"][3], 1, 1e-3)}
+          \end{array}
+        $}
+      \right]
+    \cdot 10^3 \,\mathrm{SI}\text.
+  \end{alignat}
+\end{myframe}
+
+A kondenzált frekvencia-egyenlet:
+\begin{myframe}
+  \begin{equation}
+    \det \left(
+    \widehat{\rmat K}^\b - \alpha^2 \widehat{\rmat M}^\b
+    \right) = 0
+    \text.
+  \end{equation}
+\end{myframe}
+
+A szerkezet első három saját-körfrekvenciája, és sajátfrekvenciája:
+\begin{myframe}
+  \begin{alignat}{9}
+    \alpha_1^\b & = \pyc{prin_TeX(V["alpha"]["b"][0], "", "4")} \,/\, \mathrm{s}
+    \qquad      & \rightarrow \qquad
+    f_1^\b      & = \pyc{prin_TeX(V["f"]["b"][0], "Hz", "4")}
+    \text,                                                                       \\
+    \alpha_2^\b & = \pyc{prin_TeX(V["alpha"]["b"][1], "", "4")} \,/\, \mathrm{s}
+    \qquad      & \rightarrow \qquad
+    f_2^\b      & = \pyc{prin_TeX(V["f"]["b"][1], "Hz", "4")}
+    \text,                                                                       \\
+    \alpha_3^\b & = \pyc{prin_TeX(V["alpha"]["b"][2], "", "4")} \,/\, \mathrm{s}
+    \qquad      & \rightarrow \qquad
+    f_3^\b      & = \pyc{prin_TeX(V["f"]["b"][2], "Hz", "4")}
+    \text.
+  \end{alignat}
+\end{myframe}

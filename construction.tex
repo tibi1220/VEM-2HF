@@ -1,0 +1,56 @@
+\documentclass[12pt]{standalone}
+
+\input{config/gateway}
+\input{config/math}
+\input{config/tikz}
+
+\begin{document}
+\begin{tikzpicture}[ultra thick, fill opacity=.75]
+  \def\hlf{3mm}
+
+  \coordinate (a) at (0,0);
+  \coordinate (b) at (\pv{b}, 0);
+  \coordinate (c) at (\pv{c}, 0);
+
+  % Draw coord system
+  \draw[
+    to-to, draw =cyan!40!black
+  ]
+  (0,7.5*\hlf) node[below right] {$y$}
+  |- (\pv{c}*1.15, 0) node[below left] {$x$};
+
+  % Draw beam
+  \draw[
+    rod
+  ] ($(a)+(0,\hlf)$) rectangle ($(c)-(0,\hlf)$);
+
+  % Draw mass
+  \draw[fill=red!20] (\py{P["mass"]}) coordinate(m) circle (2.5*\hlf); %node[yshift=3*\hlf,xshift=-1.5*\hlf] {$m_0$};
+  \draw[thick,{Latex[round]}-, fill opacity=1]
+  ($(m)+(120:2.5*\hlf)$) -- ++(120:2*\hlf) -- ++(-3*\hlf,0) node[midway, above=-1mm] {$m_0$};
+
+  % Draw wall
+  \draw ($(\py{P["wall"]})+(0,5*\hlf)$) coordinate (T) -- ++(0,-10*\hlf);
+  \fill[pattern=north east lines] (T) rectangle ++(\py{P["wall"] == "a" and -1 or 1}*1.25*\hlf,-10*\hlf);
+
+  % Draw pivot triangle
+  \coordinate (h) at (\py{P["pivot"]});
+  \node[gdot=8pt] (S) at ($(h)-(0,9mm)$) {};
+  \draw[very thick, fill=white] ($(S.north)+(4.4mm,0)$) -- (h) -- ($(S.north)-(4.4mm,0)$) -- cycle;
+  \fill[white, opacity=.8] ($(S.south)-(7mm,0)$) rectangle ++(14mm,-3mm);
+  \fill[pattern=north east lines] ($(S.south)-(7mm,0)$) rectangle ++(14mm,-\hlf*0.8);
+  \draw[very thick] ($(S.south)-(7mm,0)$) -- ++(14mm,0);
+
+  % Draw dims
+  \begin{scope}[on background layer]
+    \foreach \c/\l in {a/A,b/B,c/C} {
+        \draw[draw=gray, dashed, thick] (\c) -- ++(0, -6*\hlf) node[below] {$\l$};
+      }
+  \end{scope}
+  \begin{scope}[fill opacity=1]
+    \foreach \b/\e/\l in {a/b/b,b/c/a} {
+        \draw[dim] ($(\b)-(0,5.8*\hlf)$) -- ++($(\e)-(\b)$) node[midway, fill=white] {$\l$};
+      }
+  \end{scope}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,39 @@
+% Link between TeX and lua files
+\usepackage{pyluatex}
+
+% \begin{noindent}
+\begin{python}
+import sympy as sp
+from sympy.printing.latex import print_latex
+from sympy import latex
+from python.calc import calculate
+
+V = calculate({
+    "code": {
+        1: 1,
+        2: 1,
+        3: 4,
+        4: 2,
+    },
+    "name": "Sándor Tibor",
+    "neptun": "C7XUDE"
+})
+
+N = V["numeric"]
+P = V["parametric"]
+
+from python.helper import get_printer, print_SI_direct, print_matrix, prin_TeX, my_latex
+
+print_SI_var = get_printer(V)
+\end{python}
+% \end{noindent}
+
+\usepackage{xargs}
+
+\newcommand{\pv}[1]{\py{V["#1"]}}
+\newcommand{\pvec}[2]{\py{V["#1"][#2]}}
+\newcommand{\pmat}[3]{\py{V["#1"][#2, #3]}}
+
+\newcommandx{\sipv}[3][3=]{\pyc{print_SI_var({ "name":"#1", "unit":"#2", "dec":"#3" })}}
+\newcommandx{\sipvec}[4][4=]{\pyc{print_SI_direct({ "value":V["#1"][#2], "unit":"#3", "dec":"#4" })}}
+\newcommandx{\sipmat}[5][5=]{\pyc{print_SI_direct({ "value":V["#1"][#2, #3], "unit":"#4", "dec":"#5" })}}

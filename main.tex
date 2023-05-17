@@ -1,0 +1,59 @@
+\documentclass[a4paper, 12pt, table]{scrartcl}
+
+% Use Hungarian Locale
+\usepackage[magyar]{babel}
+
+% Inputs
+\input{config/gateway}
+\input{config/layout}
+\input{config/math}
+\input{config/tikz}
+\input{config/other}
+
+% code: 1142
+\begin{document}
+
+\input{titlepage}
+\allowdisplaybreaks
+
+\def\a{{(a)}}
+\def\b{{(b)}}
+\def\c{{(c)}}
+\def\d{{(d)}}
+
+\input{section/1}
+\input{section/2}
+\input{section/3}
+\input{section/4}
+\input{section/5}
+
+\clearpage
+\tableofcontents
+
+\vfill
+
+\section*{Felhasznált szoftverek}
+
+\begin{itemize}
+  \item \href{https://neovim.io}{\texttt{Neovim}}
+        \tabto{3.9cm} – \tabto{4.7cm}
+        Open Source szövegszerkesztő
+
+  \item \texttt{Lua\LaTeX}
+        \tabto{3.9cm} – \tabto{4.7cm}
+        \LaTeX{} fordító
+
+  \item \texttt{Ti\textit{k}Z}
+        \tabto{3.9cm} – \tabto{4.7cm}
+        Vektorgrafika
+
+  \item \texttt{python}
+        \tabto{3.9cm} – \tabto{4.7cm}
+        Számítások elvégzése
+\end{itemize}
+
+A házi feladat teljes forráskódja -- beleértve a számolást és dokumentációt --
+megtekinthető az alábbi linken:
+\texttt{\href{https://github.com/tibi1220/VEM-2HF}{https://github.com/tibi1220/VEM-2HF}}
+
+\end{document}

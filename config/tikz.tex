@@ -1,0 +1,73 @@
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18, width=16cm, height=8.33cm}
+\usepgfplotslibrary{fillbetween}
+\pgfkeys{/pgf/number format/use comma}
+\pgfkeys{/pgf/number format/1000 sep={\,}}
+\pgfplotsset{%
+  % xmin=0,xmax=\lv{c}*1.05,
+  every major tick/.style = {gray, semithick},
+  axis x line=center,  axis y line=center,
+  enlarge y limits=.05,
+  axis line style={-to, thick},
+  grid=both,
+  grid style={line width=.1pt, draw=gray!20},
+  major grid style={line width=.2pt,draw=gray!80},
+  scaled y ticks=false,
+}
+\usetikzlibrary{
+  calc,
+  angles,
+  quotes,
+  backgrounds,
+  patterns,
+  arrows,
+  arrows.meta,
+  positioning,
+  intersections,
+  shapes.geometric,
+}
+
+\tikzset{
+  dot/.style = {
+      circle,
+      fill=red!40!gray,
+      minimum size=#1,
+      draw=black,
+      inner sep=0pt, outer sep=0pt,
+      very thick,
+    },
+  dot/.default = 7pt,
+  gdot/.style = {
+      dot=#1,
+      fill=white
+    },
+  gdot/.default = 7pt,
+  dim/.style = {
+      latex-latex,
+      draw=teal,
+      ultra thick
+    },
+  joint/.style = {
+      circle,
+      draw=black,
+      ultra thick,
+      fill=cyan!20,
+      minimum size=6.5mm,
+      inner sep=0,
+    },
+  square/.style = {
+      regular polygon,
+      regular polygon sides=4
+    },
+  rod/.style = {
+      rectangle,
+      draw=black,
+      minimum height=6mm,
+      minimum width=6mm,
+      fill=yellow!25,
+      ultra thick,
+      midway,
+      outer sep=0,
+    },
+}
