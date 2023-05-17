@@ -1,0 +1,59 @@
+name: Build and Release LaTeX Document
+on: [push]
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    container:
+      image: danteev/texlive:latest
+    permissions: write-all
+    steps:
+      - name: Get Current Date
+        id: get_date
+        run: echo "date=$(date +'%Y-%m-%d--%H-%M-%S')" >> $GITHUB_OUTPUT
+
+      - name: Checkout repo
+        id: checkout_repo
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        id: install_deps
+        run: |
+          apt install python3
+          apt install python3-pip
+          python3 -m pip install -r requirements.txt --break-system-packages
+
+      - name: Compile LaTeX Document
+        id: compile_latex
+        run: latexmk -r .latexmkrc main.tex
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_date.outputs.date }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Document to Release
+        id: upload_latex
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/main.pdf
+          asset_name: vem-2hf-ST.pdf
+          asset_content_type: application/pdf
+
+      - name: Upload Logfile to Release
+        id: upload_log
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/main.log
+          asset_name: logfile.log
+          asset_content_type: text/log
