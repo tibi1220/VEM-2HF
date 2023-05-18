@@ -9,23 +9,26 @@
   headheight=20mm,
   % showframe
 ]{geometry}
-\usepackage{fancyhdr}
 \usepackage{lastpage}
 \usepackage[
   colorlinks=true,
   allcolors=red!40!black,
 ]{hyperref}
-\pagestyle{fancy}
-
-\renewcommand\footrulewidth{1mm}
-\renewcommand\headrulewidth{1mm}
 
 \setlength\parindent{0em}
 \setlength\parskip{.30em}
 
-\fancyfoot[C]{\thepage\ / \pageref{LastPage}}
-\fancyhead[L]{BMEGEMMBXVE, 2. Házi Feladat}
-\fancyhead[R]{%
+\usepackage[
+  headsepline=1mm,
+  footsepline=1mm,
+]{scrlayer-scrpage}
+\pagestyle{scrheadings}
+\setkomafont{pageheadfoot}{\color{gray}}
+
+\ModifyLayer[addvoffset=-2mm]{scrheadings.foot.above.line}
+\cfoot{\thepage\ / \pageref{LastPage}}
+\ihead{BMEGEMMBXVE, 2. Házi Feladat}
+\ohead{%
   \includegraphics[height = 12px]{static/signature.pdf}
   \py{V["name"]},
   \py{V["neptun"]}
